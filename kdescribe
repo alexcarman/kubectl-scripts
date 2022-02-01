@@ -1,0 +1,11 @@
+pods=$(
+  kubectl get pods --all-namespaces | \
+          tail -n +2 | \
+          fzf | \
+          awk '{ print $1"|"$2 }'
+  )
+
+for pod in $pods; do
+        echo $pod | tr '|' ' ' | xargs -n2 bash -c "kubectl -n \$0 describe pod \$1 $@"
+        echo '---'
+done
